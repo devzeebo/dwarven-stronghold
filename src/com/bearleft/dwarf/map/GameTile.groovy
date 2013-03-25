@@ -1,5 +1,6 @@
 package com.bearleft.dwarf.map
-
+import java.awt.*
+import java.lang.reflect.Modifier
 /**
  * User: Eric Siebeneich
  * Date: 3/24/13
@@ -14,8 +15,8 @@ class GameTile {
 
 	public GameTile(int type) {
 		GameTile clone = tiles[type]
-		clone.properties.keySet().each {
-			this."${it}" = clone."${it}"
+		GameTile.declaredFields.findAll { !(it.modifiers & Modifier.FINAL) }.each {
+			this."${it.name}" = clone."${it.name}"
 		}
 	}
 
@@ -23,8 +24,25 @@ class GameTile {
 
 	int type
 	byte flags
+	Color color
 
 	public void flags(byte... flags) {
 		flags.each { this.flags |= it }
+	}
+
+	public void color(int color) {
+		this.color = new Color(color)
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder('type:')
+			.append(type)
+		['PASSABLE', 'BUILDABLE', 'SWIMMABLE'].each {
+			if (flags & GameTile."${it}") {
+				sb.append(",${it}")
+			}
+		}
+		return sb.toString()
 	}
 }

@@ -16,13 +16,17 @@ class GameMap {
 		GameTile getAt(int c) {
 			return tiles[c]
 		}
+
+		void putAt(int c, GameTile tile) {
+			tiles[c] = tile
+		}
 	}
 
 	GameMapRow[] rows
 
 	public GameMap(int r, int c) {
 		rows = new GameMapRow[r]
-		(0..<r).each { rows[r] = new GameMapRow(c) }
+		(0..<r).each { rows[it] = new GameMapRow(c) }
 	}
 
 	GameMapRow getAt(int r) {

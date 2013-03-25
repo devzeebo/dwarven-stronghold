@@ -5,8 +5,15 @@ package com.bearleft.dwarf.map
  */
 class TileLoader extends TileLoaderSupport {
 	public void load() {
-		"1" {
-			flags(PASSABLE)
+
+		'1' {
+			flags PASSABLE
+			color 0xCC0000
+		}
+
+		'2' {
+			flags PASSABLE
+			color 0x121212
 		}
 	}
 
