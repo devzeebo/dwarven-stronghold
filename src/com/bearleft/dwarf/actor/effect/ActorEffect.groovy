@@ -8,11 +8,16 @@ class ActorEffect {
 
 	protected String effectName
 
-	ActorEffect(String effectName) {
+	protected int triggerSpeed
+	protected Closure applyEffect
+
+	protected ActorEffect(String effectName) {
 
 	}
 
 	String getEffectName() {
 		return effectName
 	}
+
+
 }

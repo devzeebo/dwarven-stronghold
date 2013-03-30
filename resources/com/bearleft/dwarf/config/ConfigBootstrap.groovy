@@ -1,4 +1,8 @@
-package com.bearleft.dwarf.map
+package com.bearleft.dwarf.config
+
+import com.bearleft.dwarf.map.GameTile
+import com.bearleft.dwarf.map.TileSet
+
 /**
  * User: Eric Siebeneich
  * Date: 3/29/13

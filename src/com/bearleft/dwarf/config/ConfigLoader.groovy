@@ -1,6 +1,5 @@
-package com.bearleft.dwarf.conf
+package com.bearleft.dwarf.config
 
-import com.bearleft.dwarf.map.ConfigBootstrap
 import com.bearleft.dwarf.map.GameTile
 
 /**
