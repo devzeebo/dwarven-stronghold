@@ -20,6 +20,9 @@ class GameTile {
 		}
 	}
 
+	protected GameTile(String type) {
+		this.type = type as int
+	}
 	protected GameTile() {}
 
 	int type
