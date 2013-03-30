@@ -6,7 +6,7 @@ package com.bearleft.dwarf.map
  */
 
 '1' {
-	flags PASSABLE
+	flags(PASSABLE, BUILDABLE)
 	color 0xCC0000
 }
 
@@ -21,6 +21,10 @@ package com.bearleft.dwarf.map
 }
 
 '4' {
-	flags PASSABLE
+	flags(PASSABLE, SWIMMABLE)
 	color 0x0000CC
+}
+
+'5' {
+	color 0xCCCC00
 }

@@ -11,3 +11,4 @@ import com.bearleft.dwarf.map.TileSet
 load (TileSet, GameTile) { GameTile tile ->
 	GameTile.tiles[tile.type] = tile
 }
+
