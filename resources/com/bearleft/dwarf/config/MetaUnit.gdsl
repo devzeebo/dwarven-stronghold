@@ -1,0 +1,12 @@
+package com.bearleft.dwarf.config
+/**
+ * User: Eric Siebeneich
+ * Date: 3/30/13
+ */
+
+def numberContext = context(ctype: 'java.lang.Number')
+
+contribute(numberContext) {
+	property name: 'milli', type: 'com.bearleft.dwarf.config.MetaUnit'
+	property name: 'sec', type: 'com.bearleft.dwarf.config.MetaUnit'
+}

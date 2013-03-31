@@ -1,0 +1,17 @@
+package com.bearleft.dwarf.map
+/**
+ * User: Eric Siebeneich
+ * Date: 3/30/13
+ */
+
+def context = context(ctype: 'com.bearleft.dwarf.map.ConfigGameTile', scope: closureScope(isArg: true))
+
+contribute(context) {
+
+	property name: 'PASSABLE', type: 'byte'
+	property name: 'BUILDABLE', type: 'byte'
+	property name: 'SWIMMABLE', type: 'byte'
+	method name: 'flags', type: 'void', params: ['flags': 'byte...']
+	method name: 'color', type: 'void', params: ['flags': 'int']
+	method name: 'effect', type: 'void', params: ['flags': 'String']
+}

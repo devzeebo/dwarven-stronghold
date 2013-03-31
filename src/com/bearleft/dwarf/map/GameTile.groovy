@@ -1,51 +1,77 @@
 package com.bearleft.dwarf.map
+import com.bearleft.dwarf.config.CloneContainer
+import com.bearleft.dwarf.config.IBuilder
+import com.bearleft.dwarf.config.IConfigurable
+
 import java.awt.*
-import java.lang.reflect.Modifier
 /**
  * User: Eric Siebeneich
  * Date: 3/24/13
  */
-class GameTile {
+class GameTile implements IConfigurable {
 
 	public static final byte PASSABLE  = 0b00000001
 	public static final byte BUILDABLE = 0b00000010
 	public static final byte SWIMMABLE = 0b00000100
 
-	protected static final Map<Integer, GameTile> tiles = new HashMap<Integer, GameTile>()
-
 	public GameTile(int type) {
-		GameTile clone = tiles[type]
-		GameTile.declaredFields.findAll { !(it.modifiers & Modifier.FINAL) }.each {
-			this."${it.name}" = clone."${it.name}"
-		}
+		CloneContainer.clone(GameTile, type, this)
 	}
 
-	protected GameTile(String type) {
-		this.type = type as int
-	}
 	protected GameTile() {}
 
 	int type
 	byte flags
 	Color color
+	String effect
 
-	public void flags(byte... flags) {
-		flags.each { this.flags |= it }
-	}
-
-	public void color(int color) {
-		this.color = new Color(color)
+	public Object getKey() {
+		return type
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder('type:')
-			.append(type)
+				.append(type)
 		['PASSABLE', 'BUILDABLE', 'SWIMMABLE'].each {
 			if (flags & GameTile."${it}") {
 				sb.append(",${it}")
 			}
 		}
 		return sb.toString()
+	}
+
+	//////////////////////
+	// DSL BUILDER CODE //
+	//////////////////////
+
+	static class GameTileBuilder implements IBuilder<GameTile> {
+
+		private GameTile gameTile
+
+		public void newItem(String type) {
+			gameTile = new GameTile()
+			gameTile.type = Integer.parseInt(type)
+		}
+
+		void flags(byte... flags) {
+			flags.each { gameTile.flags |= it }
+		}
+
+		void color(int color) {
+			gameTile.color = new Color(color)
+		}
+
+		void effect(String effect) {
+			gameTile.effect = effect
+		}
+
+		public GameTile getBuiltItem() {
+			return gameTile
+		}
+
+		public Class<GameTile> getType() {
+			return GameTile
+		}
 	}
 }

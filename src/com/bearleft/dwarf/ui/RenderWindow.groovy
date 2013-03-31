@@ -29,7 +29,7 @@ class RenderWindow extends JPanel {
 		map = new GameMap(10, 10)
 		(0..<10).each { r ->
 			(0..<10).each { c ->
-				map[r][c] = new GameTile(Math.round(1 + Math.random() * 3) as int)
+				map[r][c] = new GameTile(Math.round(1 + (r / 9) * 3) as int)
 			}
 		}
 

@@ -1,32 +1,35 @@
 package com.bearleft.dwarf.config
-
-import com.bearleft.dwarf.map.GameTile
-
 /**
  * User: Eric Siebeneich
  * Date: 3/29/13
  */
 class ConfigLoader<T> {
 
+	static {
+		MetaUnit.bindMetaClass()
+	}
+
 	public static void load(Class<Script> configFile) {
 
-		configFile.metaClass.load = { Class<Script> script, Class type, Closure onLoad ->
-			load(script, type, onLoad)
+		configFile.metaClass.load = { Class<Script> script, Class type ->
+			load(script, type)
 		}
 		configFile.newInstance().run()
 	}
 
-	public static void load(Class<Script> script, Class<T> type, Closure onLoad) {
+	public static <S extends IBuilder<T>, T extends IConfigurable> void load(Class<Script> script, Class<S> type) {
+
+		S builder = type.newInstance()
 
 		script.metaClass.methodMissing = { String method, args ->
 
-			T var = type.newInstance(method)
+			builder.newItem(method)
 
 			Closure clos = (Closure)args[0]
-			clos.delegate = var
+			clos.delegate = builder
 			clos()
 
-			onLoad(var)
+			CloneContainer.addClone(builder.type, builder.builtItem.key, builder.builtItem)
 		}
 
 		script.newInstance().run()
@@ -35,6 +38,6 @@ class ConfigLoader<T> {
 	public static void main(String[] args) {
 		ConfigLoader.load(ConfigBootstrap)
 
-		println GameTile.tiles
+		println CloneContainer.Singleton.instance.clones
 	}
 }

@@ -23,6 +23,7 @@ package com.bearleft.dwarf.map
 '4' {
 	flags(PASSABLE, SWIMMABLE)
 	color 0x0000CC
+	effect 'swimming'
 }
 
 '5' {
