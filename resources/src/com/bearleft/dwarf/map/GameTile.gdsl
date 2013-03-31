@@ -1,0 +1,29 @@
+package com.bearleft.dwarf.map
+/**
+ * User: Eric Siebeneich
+ * Date: 3/30/13
+ */
+
+def scriptContext = context(ctype: 'com.bearleft.dwarf.map.ConfigGameTile')
+contribute(scriptContext) {
+	method name: 'type', type: 'void', params: [args: [
+		parameter(name: 'name', type: 'java.lang.String'),
+		parameter(name: 'value', type: 'java.lang.Integer')
+	]]
+	method name: 'staticTypes', type: 'void', params: [closure: {}]
+}
+
+def closureContext = context(ctype: 'com.bearleft.dwarf.map.ConfigGameTile', scope: closureScope(isArg: true))
+contribute(closureContext) {
+	method name: 'flags', type: 'void', params: ['flags': 'byte...']
+	method name: 'color', type: 'void', params: ['flags': 'int']
+	method name: 'effect', type: 'void', params: ['flags': 'String']
+	method name: 'url', type: 'void', params: ['flags': 'String']
+}
+
+def classContext = context(ctype: 'com.bearleft.dwarf.map.GameTile')
+contribute([classContext, closureContext]) {
+	property name: 'PASSABLE',  type: 'byte'
+	property name: 'BUILDABLE', type: 'byte'
+	property name: 'SWIMMABLE', type: 'byte'
+}

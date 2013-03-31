@@ -3,27 +3,27 @@ import com.bearleft.dwarf.config.CloneContainer
 import com.bearleft.dwarf.config.IBuilder
 import com.bearleft.dwarf.config.IConfigurable
 
+import javax.imageio.ImageIO
 import java.awt.*
+import java.util.List
 /**
  * User: Eric Siebeneich
  * Date: 3/24/13
  */
 class GameTile implements IConfigurable {
 
-	public static final byte PASSABLE  = 0b00000001
-	public static final byte BUILDABLE = 0b00000010
-	public static final byte SWIMMABLE = 0b00000100
-
 	public GameTile(int type) {
-		CloneContainer.clone(GameTile, type, this)
+		GameTile source = CloneContainer.clone(GameTile, type, this, ['images'])
+		if (source.images) {
+			image = source.images[(int)(Math.random() * source.images.size())]
+		}
 	}
-
-	protected GameTile() {}
 
 	int type
 	byte flags
 	Color color
 	String effect
+	Image image
 
 	public Object getKey() {
 		return type
@@ -33,7 +33,7 @@ class GameTile implements IConfigurable {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder('type:')
 				.append(type)
-		['PASSABLE', 'BUILDABLE', 'SWIMMABLE'].each {
+		types.keySet().each {
 			if (flags & GameTile."${it}") {
 				sb.append(",${it}")
 			}
@@ -45,6 +45,18 @@ class GameTile implements IConfigurable {
 	// DSL BUILDER CODE //
 	//////////////////////
 
+	protected static final Map<String, Byte> types = [:]
+
+	static {
+		GameTile.metaClass.static.propertyMissing = { String name ->
+			return types[name]
+		}
+	}
+
+	List<Image> images
+
+	protected GameTile() {}
+
 	static class GameTileBuilder implements IBuilder<GameTile> {
 
 		private GameTile gameTile
@@ -54,7 +66,7 @@ class GameTile implements IConfigurable {
 			gameTile.type = Integer.parseInt(type)
 		}
 
-		void flags(byte... flags) {
+		void flags(Object... flags) {
 			flags.each { gameTile.flags |= it }
 		}
 
@@ -64,6 +76,13 @@ class GameTile implements IConfigurable {
 
 		void effect(String effect) {
 			gameTile.effect = effect
+		}
+
+		void url(String url) {
+			if (!gameTile.images) {
+				gameTile.images = []
+			}
+			gameTile.images.add(ImageIO.read(new File(url)))
 		}
 
 		public GameTile getBuiltItem() {

@@ -21,15 +21,33 @@ class ConfigLoader<T> {
 
 		S builder = type.newInstance()
 
+		String currentType = null
+
+		script.metaClass.propertyMissing = { String name -> builder.type."${name}" }
+
 		script.metaClass.methodMissing = { String method, args ->
 
-			builder.newItem(method)
+			if (currentType != null && method.equals(currentType.substring(0, currentType.length() - 1))) {
+				builder.type."${currentType}"[args['name'][0]] = args['value'][0]
+			}
+			else {
+				if (method.startsWith('static')) {
+					currentType = "${method.charAt(6).toLowerCase()}${method.substring(7)}"
 
-			Closure clos = (Closure)args[0]
-			clos.delegate = builder
-			clos()
+					Closure clos = (Closure)args[0]
+					clos.delegate = builder
+					clos()
+				}
+				else {
+					builder.newItem(method)
 
-			CloneContainer.addClone(builder.type, builder.builtItem.key, builder.builtItem)
+					Closure clos = (Closure)args[0]
+					clos.delegate = builder
+					clos()
+
+					CloneContainer.addClone(builder.type, builder.builtItem.key, builder.builtItem)
+				}
+			}
 		}
 
 		script.newInstance().run()

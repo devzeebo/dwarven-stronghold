@@ -29,10 +29,18 @@ class CloneContainer {
 		return Singleton.instance.clones[type]
 	}
 
-	public static <T> void clone(Class<T> type, Object key, T obj) {
+	public static <T> T clone(Class<T> type, Object key, T obj) {
 		T clone = CloneContainer[type][key]
 		type.declaredFields.findAll { !(it.modifiers & Modifier.FINAL) }.each {
 			obj."${it.name}" = clone."${it.name}"
 		}
+		return clone
+	}
+	public static <T> T clone(Class<T> type, Object key, T obj, List<String> exclude) {
+		T clone = CloneContainer[type][key]
+		type.declaredFields.findAll { !((it.modifiers & Modifier.FINAL) || exclude.contains(it.name) || it.synthetic) }.each {
+			obj."${it.name}" = clone."${it.name}"
+		}
+		return clone
 	}
 }

@@ -5,9 +5,16 @@ package com.bearleft.dwarf.map
  * Date: 3/29/13
  */
 
+staticTypes {
+	type name: 'PASSABLE',  value: 0b00000001
+	type name: 'BUILDABLE', value: 0b00000010
+	type name: 'SWIMMABLE', value: 0b00000100
+}
+
 '1' {
 	flags(PASSABLE, BUILDABLE)
-	color 0xCC0000
+	url 'resources/images/gametile/grass.jpg'
+	url 'resources/images/gametile/grass2.jpg'
 }
 
 '2' {

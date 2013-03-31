@@ -14,7 +14,7 @@ class GameMap {
 		}
 
 		GameTile getAt(int c) {
-			return tiles[c]
+			return tiles[c % tiles.length]
 		}
 
 		void putAt(int c, GameTile tile) {
@@ -30,6 +30,6 @@ class GameMap {
 	}
 
 	GameMapRow getAt(int r) {
-		return rows[r]
+		return rows[r % rows.length]
 	}
 }
