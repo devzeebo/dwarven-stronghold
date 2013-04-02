@@ -1,7 +1,9 @@
 package com.bearleft.dwarf.ui
+
 import com.bearleft.dwarf.actor.Actor
 import com.bearleft.dwarf.config.ConfigBootstrap
-import com.bearleft.dwarf.config.ConfigLoader
+import com.bearleft.dwarf.config.Configuration
+import com.bearleft.dwarf.config.ResourceLoader
 import com.bearleft.dwarf.map.GameMap
 import com.bearleft.dwarf.map.GameTile
 import com.bearleft.dwarf.ui.RenderWindow.Renderer
@@ -28,12 +30,15 @@ class RenderWindow extends JPanel {
 	JFrame frame
 
 	RenderWindow() {
+
+		Configuration.loadConfigFile('settings.ini')
+
 		frame = new JFrame()
 		frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 		frame.undecorated = true
 		frame.ignoreRepaint = true
 		GraphicsEnvironment ge = GraphicsEnvironment.localGraphicsEnvironment
-		GraphicsDevice gd = ge.screenDevices[1]
+		GraphicsDevice gd = ge.screenDevices.find { it.IDstring == Configuration['screenDevice'] }
 		gd.fullScreenWindow = frame
 
 		frame.visible = true
@@ -47,7 +52,7 @@ class RenderWindow extends JPanel {
 			g.drawString("${String.format("%.2f", percentComplete)}%", 600, 500)
 		}] as Renderer
 
-		ConfigLoader.load(ConfigBootstrap)
+		ResourceLoader.load(ConfigBootstrap)
 
 		map = new GameMap(w, h)
 		(0..<w).each { r ->

@@ -3,7 +3,7 @@ package com.bearleft.dwarf.config
  * User: Eric Siebeneich
  * Date: 3/29/13
  */
-class ConfigLoader<T> {
+class ResourceLoader<T> {
 
 	static {
 		MetaUnit.bindMetaClass()
@@ -54,7 +54,7 @@ class ConfigLoader<T> {
 	}
 
 	public static void main(String[] args) {
-		ConfigLoader.load(ConfigBootstrap)
+		ResourceLoader.load(ConfigBootstrap)
 
 		println CloneContainer.Singleton.instance.clones
 	}
