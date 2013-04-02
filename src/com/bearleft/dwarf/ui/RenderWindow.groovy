@@ -6,7 +6,6 @@ import com.bearleft.dwarf.config.Configuration
 import com.bearleft.dwarf.config.ResourceLoader
 import com.bearleft.dwarf.map.GameMap
 import com.bearleft.dwarf.map.GameTile
-import com.bearleft.dwarf.ui.RenderWindow.Renderer
 
 import javax.swing.*
 import java.awt.*
@@ -28,6 +27,8 @@ class RenderWindow extends JPanel {
 	Renderer renderer
 
 	JFrame frame
+
+	boolean debug = false
 
 	RenderWindow() {
 
@@ -69,8 +70,8 @@ class RenderWindow extends JPanel {
 		bindKeyListeners()
 
 		renderer = [render: { Graphics g ->
-			int tileWidth = 128
-			int tileHeight = 128
+			int tileWidth = 64
+			int tileHeight = 64
 
 			int numTilesX = (int)(frame.width / tileWidth + 2)
 			int numTilesY = (int)(frame.height / tileHeight + 2)
@@ -81,8 +82,10 @@ class RenderWindow extends JPanel {
 				}
 			}
 			drawTile(g, new GameTile(5), player.x, player.y, tileWidth, tileHeight, player.x, player.y)
-			g.drawLine((int)frame.width / 2, 0, (int)frame.width / 2, (int)frame.height)
-			g.drawLine(0, (int)frame.height / 2, (int)frame.width, (int)frame.height / 2)
+			if (debug) {
+				g.drawLine((int)frame.width / 2, 0, (int)frame.width / 2, (int)frame.height)
+				g.drawLine(0, (int)frame.height / 2, (int)frame.width, (int)frame.height / 2)
+			}
 		}] as Renderer
 	}
 
@@ -129,8 +132,10 @@ class RenderWindow extends JPanel {
 			g.color = tile.color
 			g.fillRect(x, y, tileWidth, tileHeight)
 		}
-		g.color = Color.black
-		g.drawString("($r,$c)", x + 5, y + 15)
+		if (debug) {
+			g.color = Color.black
+			g.drawString("($r,$c)", x + 5, y + 15)
+		}
 	}
 
 	protected bindKeyListeners = {
