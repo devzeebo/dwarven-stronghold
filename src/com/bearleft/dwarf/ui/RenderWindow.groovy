@@ -28,7 +28,7 @@ class RenderWindow extends JPanel {
 
 	JFrame frame
 
-	boolean debug = false
+	boolean debug = true
 
 	RenderWindow() {
 
@@ -97,8 +97,8 @@ class RenderWindow extends JPanel {
 
 	public void renderLoop(JFrame frame) {
 
-		BufferCapabilities cap = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), BufferCapabilities.FlipContents.COPIED)
-		frame.createBufferStrategy(2, cap)
+//		BufferCapabilities cap = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), BufferCapabilities.FlipContents.COPIED)
+		frame.createBufferStrategy(2)
 		BufferStrategy strat = frame.bufferStrategy
 
 		Thread.startDaemon {
