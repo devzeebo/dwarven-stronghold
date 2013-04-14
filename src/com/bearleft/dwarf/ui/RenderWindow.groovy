@@ -4,22 +4,22 @@ import com.bearleft.dwarf.actor.Actor
 import com.bearleft.dwarf.config.ConfigBootstrap
 import com.bearleft.dwarf.config.Configuration
 import com.bearleft.dwarf.config.ResourceLoader
-import com.bearleft.dwarf.map.GameMap
 import com.bearleft.dwarf.map.GameTile
+import com.bearleft.dwarf.model.GameModel
+import com.bearleft.dwarf.model.IProgressListener
+import com.bearleft.dwarf.model.Loader
+import com.bearleft.dwarf.ui.RenderWindow.Renderer
 
 import javax.swing.*
 import java.awt.*
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.image.BufferStrategy
-
 /**
  * User: Eric Siebeneich
  * Date: 3/24/13
  */
 class RenderWindow extends JPanel {
-
-	Actor player
 
 	int w = 100
 	int h = 100
@@ -27,6 +27,8 @@ class RenderWindow extends JPanel {
 	Renderer renderer
 
 	JFrame frame
+
+	GameModel model
 
 	boolean debug = true
 
@@ -47,49 +49,58 @@ class RenderWindow extends JPanel {
 		renderLoop(frame)
 
 		double percentComplete = 0.0
+		String loadingText = ''
 
 		renderer = [render: { Graphics g ->
 			g.clearRect(0, 0, frame.width, frame.height)
-			g.drawString("${String.format("%.2f", percentComplete)}%", 600, 500)
+			g.drawString("${String.format("%.2f", percentComplete * 100)}%", 600, 500)
+			g.drawString(loadingText, 600, 450)
 		}] as Renderer
 
 		ResourceLoader.load(ConfigBootstrap)
 
-		map = new GameMap(w, h)
-		(0..<w).each { r ->
-			(0..<h).each { c ->
-				map[r][c] = new GameTile(1)
-				percentComplete = ((double)r * h + c) / (w * h) * 100
-				frame.repaint()
+		model = new GameModel(w, h)
+
+		Loader loader = new Loader()
+		loader.loadables << model
+		loader.listener = new IProgressListener() {
+			@Override
+			void setProgressPercent(double percent) {
+				percentComplete = percent
+			}
+
+			@Override
+			void setProgressText(String text) {
+				loadingText = text
 			}
 		}
+		loader.load {
+			bindKeyListeners.delegate = frame
+			bindKeyListeners()
 
-		player = new Actor()
+			renderer = [render: { Graphics g ->
 
-		bindKeyListeners.delegate = frame
-		bindKeyListeners()
+				Actor player = model.actors['player']
 
-		renderer = [render: { Graphics g ->
-			int tileWidth = 64
-			int tileHeight = 64
+				int tileWidth = 64
+				int tileHeight = 64
 
-			int numTilesX = (int)(frame.width / tileWidth + 2)
-			int numTilesY = (int)(frame.height / tileHeight + 2)
+				int numTilesX = (int)(frame.width / tileWidth + 2)
+				int numTilesY = (int)(frame.height / tileHeight + 2)
 
-			(player.x - numTilesX / 2 ..< player.x + numTilesX / 2).each { r ->
-				(player.y - numTilesY / 2 ..< player.y + numTilesY / 2).each { c ->
-					drawTile(g, map[(int)r][(int)c], (int)r, (int)c, tileWidth, tileHeight, player.x, player.y)
+				(player.x - numTilesX / 2 ..< player.x + numTilesX / 2).each { r ->
+					(player.y - numTilesY / 2 ..< player.y + numTilesY / 2).each { c ->
+						drawTile(g, model.map[(int)r][(int)c], (int)r, (int)c, tileWidth, tileHeight, player.x, player.y)
+					}
 				}
-			}
-			drawTile(g, new GameTile(5), player.x, player.y, tileWidth, tileHeight, player.x, player.y)
-			if (debug) {
-				g.drawLine((int)frame.width / 2, 0, (int)frame.width / 2, (int)frame.height)
-				g.drawLine(0, (int)frame.height / 2, (int)frame.width, (int)frame.height / 2)
-			}
-		}] as Renderer
+				drawTile(g, new GameTile(5), player.x, player.y, tileWidth, tileHeight, player.x, player.y)
+				if (debug) {
+					g.drawLine((int)frame.width / 2, 0, (int)frame.width / 2, (int)frame.height)
+					g.drawLine(0, (int)frame.height / 2, (int)frame.width, (int)frame.height / 2)
+				}
+			}] as Renderer
+		}
 	}
-
-	GameMap map
 
 	interface Renderer {
 		public void render(Graphics g)
@@ -139,6 +150,8 @@ class RenderWindow extends JPanel {
 	}
 
 	protected bindKeyListeners = {
+
+		Actor player = model.actors['player']
 
 		delegate.addKeyListener([
 			keyPressed: { KeyEvent e ->
