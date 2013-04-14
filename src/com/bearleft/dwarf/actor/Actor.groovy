@@ -1,6 +1,7 @@
 package com.bearleft.dwarf.actor
 
 import com.bearleft.dwarf.actor.effect.ActorEffect
+import com.bearleft.dwarf.actor.skill.ActorSkill
 
 /**
  * User: Eric Siebeneich
@@ -9,6 +10,7 @@ import com.bearleft.dwarf.actor.effect.ActorEffect
 class Actor {
 
 	List<ActorEffect> effects
+	Map<String, ActorSkill> skills
 
 	int x
 	int y
@@ -16,6 +18,7 @@ class Actor {
 	public Actor() {
 
 		effects = []
+		skills = [:]
 
 		x = 0
 		y = 0

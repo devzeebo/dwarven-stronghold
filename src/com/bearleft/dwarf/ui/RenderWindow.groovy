@@ -143,6 +143,9 @@ class RenderWindow extends JPanel {
 		delegate.addKeyListener([
 			keyPressed: { KeyEvent e ->
 				switch (e.keyCode) {
+					case KeyEvent.VK_ESCAPE:
+						System.exit(0)
+						break
 					case KeyEvent.VK_LEFT:
 					case KeyEvent.VK_A:
 						player.x--
