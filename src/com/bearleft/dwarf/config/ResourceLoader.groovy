@@ -21,9 +21,32 @@ class ResourceLoader<T> {
 
 		S builder = type.newInstance()
 
-		String currentType = null
+		definePropertyMissing(script, builder)
 
-		script.metaClass.propertyMissing = { String name -> builder.type."${name}" }
+		defineMethodMissing(script, builder, false)
+
+		script.newInstance().run()
+	}
+
+	public static <S extends IDelayedBuilder<T>, T extends IConfigurable> void loadDelayed(Class<Script> script, Class<S> type) {
+
+		S builder = type.newInstance()
+
+		definePropertyMissing(script, builder)
+
+		defineMethodMissing(script, builder, true)
+
+		script.newInstance().run()
+
+		builder.items.each {
+			T item = builder.buildItem(it)
+			CloneContainer.addClone(builder.type, item.key, item)
+		}
+	}
+
+	private static void defineMethodMissing(Class<Script> script, def builder, boolean delayed) {
+
+		String currentType = null
 
 		script.metaClass.methodMissing = { String method, args ->
 
@@ -45,12 +68,16 @@ class ResourceLoader<T> {
 					clos.delegate = builder
 					clos()
 
-					CloneContainer.addClone(builder.type, builder.builtItem.key, builder.builtItem)
+					if (!delayed) {
+						CloneContainer.addClone(builder.type, builder.builtItem.key, builder.builtItem)
+					}
 				}
 			}
 		}
+	}
 
-		script.newInstance().run()
+	private static void definePropertyMissing(Class<Script> script, def builder) {
+		script.metaClass.propertyMissing = { String name -> builder.type."${name}" }
 	}
 
 	public static void main(String[] args) {
