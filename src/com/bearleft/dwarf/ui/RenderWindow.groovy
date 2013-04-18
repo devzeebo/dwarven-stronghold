@@ -30,7 +30,7 @@ class RenderWindow extends JPanel {
 
 	GameModel model
 
-	boolean debug = true
+	boolean debug = false
 
 	RenderWindow() {
 
@@ -42,7 +42,12 @@ class RenderWindow extends JPanel {
 		frame.ignoreRepaint = true
 		GraphicsEnvironment ge = GraphicsEnvironment.localGraphicsEnvironment
 		GraphicsDevice gd = ge.screenDevices.find { it.IDstring == Configuration['screenDevice'] }
-		gd.fullScreenWindow = frame
+		if (Configuration['fullscreen']) {
+			gd.fullScreenWindow = frame
+		}
+		else {
+			frame.bounds = gd.defaultConfiguration.bounds
+		}
 
 		frame.visible = true
 
@@ -93,7 +98,7 @@ class RenderWindow extends JPanel {
 						drawTile(g, model.map[(int)r][(int)c], (int)r, (int)c, tileWidth, tileHeight, player.x, player.y)
 					}
 				}
-				drawTile(g, new GameTile(5), player.x, player.y, tileWidth, tileHeight, player.x, player.y)
+				drawTile(g, new GameTile(2), player.x, player.y, tileWidth, tileHeight, player.x, player.y)
 				if (debug) {
 					g.drawLine((int)frame.width / 2, 0, (int)frame.width / 2, (int)frame.height)
 					g.drawLine(0, (int)frame.height / 2, (int)frame.width, (int)frame.height / 2)
@@ -114,11 +119,14 @@ class RenderWindow extends JPanel {
 
 		Thread.startDaemon {
 			while(true) {
-				if (!strat.contentsLost()) {
+				if (!strat.contentsLost() || strat.contentsRestored()) {
 					Graphics g = strat.drawGraphics
 					render(g)
 					g.dispose()
 					strat.show()
+				}
+				else {
+					Thread.sleep(100)
 				}
 			}
 		}

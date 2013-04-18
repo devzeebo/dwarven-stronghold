@@ -19,20 +19,5 @@ staticTypes {
 
 '2' {
 	flags PASSABLE
-	color 0x121212
-}
-
-'3' {
-	flags PASSABLE
-	color 0x00CC00
-}
-
-'4' {
-	flags(PASSABLE, SWIMMABLE)
-	color 0x0000CC
-	effect 'swimming'
-}
-
-'5' {
-	color 0xCCCC00
+	url 'resources/images/actor/player.png'
 }
