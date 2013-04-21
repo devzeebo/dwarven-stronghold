@@ -8,7 +8,6 @@ import com.bearleft.dwarf.map.GameTile
 import com.bearleft.dwarf.model.GameModel
 import com.bearleft.dwarf.model.IProgressListener
 import com.bearleft.dwarf.model.Loader
-import com.bearleft.dwarf.ui.RenderWindow.Renderer
 
 import javax.swing.*
 import java.awt.*
