@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/dwarven-stronghold.iml" filepath="$PROJECT_DIR$/dwarven-stronghold.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dwarvenstronghold.iml" filepath="$PROJECT_DIR$/dwarvenstronghold.iml" />
     </modules>
   </component>
 </project>
