@@ -23,8 +23,12 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="dwarven-stronghold" />
+        <module name="dwarvenstronghold" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dwarvenstronghold" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 
