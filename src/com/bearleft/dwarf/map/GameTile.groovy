@@ -2,8 +2,10 @@ package com.bearleft.dwarf.map
 import com.bearleft.dwarf.config.CloneContainer
 import com.bearleft.dwarf.config.IBuilder
 import com.bearleft.dwarf.config.IConfigurable
+import org.newdawn.slick.opengl.Texture
+import org.newdawn.slick.opengl.TextureLoader
 
-import javax.imageio.ImageIO
+import javax.swing.text.html.ResourceLoader
 import java.awt.*
 import java.util.List
 /**
@@ -23,7 +25,7 @@ class GameTile implements IConfigurable {
 	byte flags
 	Color color
 	String effect
-	Image image
+	Texture image
 
 	public Object getKey() {
 		return type
@@ -82,7 +84,7 @@ class GameTile implements IConfigurable {
 			if (!gameTile.images) {
 				gameTile.images = []
 			}
-			gameTile.images.add(ImageIO.read(new File(url)))
+			gameTile.images.add(TextureLoader.getTexture('', ResourceLoader.getResourceAsStream(url)))
 		}
 
 		public GameTile getBuiltItem() {
