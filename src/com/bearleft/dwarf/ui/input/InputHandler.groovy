@@ -10,8 +10,8 @@ class InputHandler {
 	protected Map<String, Map<Integer, KeyEvent>> keyEvents = [:]
 	protected String currentName
 
-	public InputHandler() {
-		Thread.startDaemon {
+	public void start() {
+		Thread.startDaemon('Input') {
 			while(true) {
 				if (Keyboard.created) {
 					handleInput()
@@ -47,7 +47,6 @@ class InputHandler {
 		}
 		keyEvents[currentName][keyCode]."${prop}" = clos
 	}
-
 
 	public void handleInput() {
 		while(Keyboard.next()) {
