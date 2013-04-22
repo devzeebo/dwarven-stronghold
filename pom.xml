@@ -27,11 +27,12 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>localRepo</id>
-			<url>file://E:/mvn/repository</url>
-		</repository>
+		<!--<repository>-->
+			<!--<id>localRepo</id>-->
+			<!--<url>file://E:/mvn/repository</url>-->
+		<!--</repository>-->
 
+		<!--This is down, check later-->
 		<!--<repository>-->
 			<!--<id>slick</id>-->
 			<!--<name>slick</name>-->
@@ -45,11 +46,11 @@
 			<artifactId>lwjgl</artifactId>
 			<version>${lwjgl.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>slick</groupId>
-			<artifactId>slick</artifactId>
-			<version>${slick.version}</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>slick</groupId>-->
+			<!--<artifactId>slick</artifactId>-->
+			<!--<version>${slick.version}</version>-->
+		<!--</dependency>-->
 		<!--<dependency>-->
 			<!--<groupId>java3d</groupId>-->
 			<!--<artifactId>vecmath</artifactId>-->
