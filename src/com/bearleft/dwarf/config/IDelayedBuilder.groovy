@@ -10,7 +10,7 @@ public interface IDelayedBuilder<T extends IConfigurable> {
 
 	void buildItem(String type)
 
-	List<String> getItems()
+	Map<String, T> getItems()
 
 	Class<T> getType()
 }
