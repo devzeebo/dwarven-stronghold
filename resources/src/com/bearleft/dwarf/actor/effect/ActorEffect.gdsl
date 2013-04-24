@@ -9,6 +9,6 @@ def context = context(ctype: 'com.bearleft.dwarf.actor.effect.ConfigActorEffect'
 contribute(context) {
 
 	method name: 'trigger', type: 'void', params: ['millis': 'long']
-	method name: 'every', type: 'long', params: ['time': 'com.bearleft.dwarf.config.MetaUnit']
+	method name: 'every', type: 'long', params: ['time': 'com.bearleft.dwarf.util.MetaUnit']
 	method name: 'once', type: 'long'
 }

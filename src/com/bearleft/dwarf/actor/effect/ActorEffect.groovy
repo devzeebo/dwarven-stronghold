@@ -2,7 +2,7 @@ package com.bearleft.dwarf.actor.effect
 import com.bearleft.dwarf.config.CloneContainer
 import com.bearleft.dwarf.config.IBuilder
 import com.bearleft.dwarf.config.IConfigurable
-import com.bearleft.dwarf.config.MetaUnit
+import com.bearleft.dwarf.util.MetaUnit
 /**
  * User: Eric Siebeneich
  * Date: 3/29/13

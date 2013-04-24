@@ -2,8 +2,7 @@ package com.bearleft.dwarf.ai
 import com.bearleft.dwarf.config.CloneContainer
 import com.bearleft.dwarf.config.IConfigurable
 import com.bearleft.dwarf.config.IDelayedBuilder
-import com.bearleft.dwarf.config.IBuilder
-import com.bearleft.dwarf.config.MetaUnit
+
 /**
  * Created with IntelliJ IDEA.
  * User: Gabriel

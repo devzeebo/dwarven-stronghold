@@ -7,6 +7,6 @@ package com.bearleft.dwarf.config
 def numberContext = context(ctype: 'java.lang.Number')
 
 contribute(numberContext) {
-	property name: 'milli', type: 'com.bearleft.dwarf.config.MetaUnit'
-	property name: 'sec', type: 'com.bearleft.dwarf.config.MetaUnit'
+	property name: 'milli', type: 'com.bearleft.dwarf.util.MetaUnit'
+	property name: 'sec', type: 'com.bearleft.dwarf.util.MetaUnit'
 }

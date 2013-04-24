@@ -1,13 +1,17 @@
-package com.bearleft.dwarf.config
+package com.bearleft.dwarf.resource
+
+import com.bearleft.dwarf.config.CloneContainer
+import com.bearleft.dwarf.config.ConfigBootstrap
+import com.bearleft.dwarf.config.IBuilder
+import com.bearleft.dwarf.config.IConfigurable
+import com.bearleft.dwarf.config.IDelayedBuilder
+import com.bearleft.dwarf.util.MetaUtility
+
 /**
  * User: Eric Siebeneich
  * Date: 3/29/13
  */
 class ResourceLoader<T> {
-
-	static {
-		MetaUnit.bindMetaClass()
-	}
 
 	public static void load(Class<Script> configFile) {
 
@@ -81,6 +85,7 @@ class ResourceLoader<T> {
 	}
 
 	public static void main(String[] args) {
+		MetaUtility.bind()
 		ResourceLoader.load(ConfigBootstrap)
 
 		println CloneContainer.Singleton.instance.clones

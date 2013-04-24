@@ -1,4 +1,4 @@
-package com.bearleft.dwarf.config
+package com.bearleft.dwarf.util
 
 /**
  * User: Eric Siebeneich
@@ -47,7 +47,7 @@ final class MetaUnit {
 		return new MetaUnit(normalize(num, units), typeOf(units))
 	}
 
-	public static final void bindMetaClass() {
+	public static final void bind() {
 		Number.metaClass.propertyMissing = { String propertyName ->
 			return MetaUnit.valueOf(delegate, propertyName)
 		}
