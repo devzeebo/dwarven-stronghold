@@ -5,6 +5,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.bearleft.dwarf.config.CloneContainer
+import com.bearleft.dwarf.config.ConfigBootstrap
+import com.bearleft.dwarf.map.GameTile
+import com.bearleft.dwarf.resource.ResourceLoader
 import com.bearleft.dwarf.resource.asset.ClasspathFileHandleResolver
 import com.bearleft.dwarf.util.MetaUtility
 /**
@@ -17,8 +21,15 @@ class LibgdxGameManager implements ApplicationListener {
 
 	@Override
 	void create() {
+		ResourceLoader.load(ConfigBootstrap)
+
 		am = new AssetManager(new ClasspathFileHandleResolver())
-		am.load('resources/images/gametile/grass.jpg', Texture)
+
+		CloneContainer[GameTile].values().each { GameTile tile ->
+			if (tile.images) {
+				tile.images.each { am.load(it, Texture) }
+			}
+		}
 
 		am.finishLoading()
 	}
@@ -31,8 +42,11 @@ class LibgdxGameManager implements ApplicationListener {
 	@Override
 	void render() {
 		SpriteBatch batch = new SpriteBatch()
+
+		GameTile gt = new GameTile(1)
+
 		batch.begin()
-		batch.draw(am.get('resources/images/gametile/grass.jpg'), 100, 100)
+		batch.draw(am.get(gt.image), 100, 100)
 		batch.end()
 	}
 

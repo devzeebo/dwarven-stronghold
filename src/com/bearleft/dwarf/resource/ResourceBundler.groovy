@@ -14,7 +14,7 @@ class ResourceBundler {
 
 	public File bundle(String output, String base) {
 		def includes = resources.collect { it.absolutePath.replace('\\', '/').replace(base.replace('\\', '/'), '').replaceAll('^(/|\\\\)', '') }.join(',')
-		println includes
+
 		new AntBuilder().with {
 			jar destfile: output,
 				basedir: base,
@@ -36,7 +36,7 @@ class ResourceBundler {
 				}
 			}
 			else if (file.file) {
-				if (file.absolutePath ==~ /^[^.]*?(?:(?:(?:.(?=.*)))*.(?:${resourceTypes.join('|')}))?$/) {
+				if (file.absolutePath ==~ /^[^.]*?(?:(?:\.[^.]*)*\.(?:${resourceTypes.join('|')}))?$/) {
 					resources << file
 				}
 			}
