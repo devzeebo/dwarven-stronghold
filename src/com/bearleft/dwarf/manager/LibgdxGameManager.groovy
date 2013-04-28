@@ -25,6 +25,9 @@ class LibgdxGameManager implements ApplicationListener {
 	void create() {
 		ResourceLoader.load(ConfigBootstrap)
 
+		map = new GameMap(10, 10)
+		map[0][0] = new GameTile(1)
+
 		am = new AssetManager(new ClasspathFileHandleResolver())
 
 		CloneContainer[GameTile].values().each { GameTile tile ->
@@ -45,10 +48,8 @@ class LibgdxGameManager implements ApplicationListener {
 	void render() {
 		SpriteBatch batch = new SpriteBatch()
 
-		GameTile gt = new GameTile(1)
-
 		batch.begin()
-		batch.draw(am.get(gt.image), 100, 100)
+		batch.draw(am.get(map[0][0].image), 100, 100)
 		batch.end()
 	}
 
