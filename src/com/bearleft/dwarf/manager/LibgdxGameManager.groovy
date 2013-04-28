@@ -120,8 +120,8 @@ class LibgdxGameManager implements ApplicationListener {
 		cfg.with {
 			title = 'Dwarven Stronghold'
 			useGL20 = true
-			width = 1920
-			height = 1080
+			width = 1600
+			height = 900
 			resizable = false
 		}
 		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true")
