@@ -21,7 +21,6 @@ class ResourceBundler {
 				includes: includes
 		}
 		return new File(output)
-
 	}
 
 	public void leftShift(String resource) {
