@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.bearleft.dwarf.config.CloneContainer
 import com.bearleft.dwarf.config.ConfigBootstrap
+import com.bearleft.dwarf.map.GameMap
 import com.bearleft.dwarf.map.GameTile
 import com.bearleft.dwarf.resource.ResourceLoader
 import com.bearleft.dwarf.resource.asset.ClasspathFileHandleResolver
@@ -17,6 +18,7 @@ import com.bearleft.dwarf.util.MetaUtility
  */
 class LibgdxGameManager implements ApplicationListener {
 
+	GameMap map
 	AssetManager am
 
 	@Override

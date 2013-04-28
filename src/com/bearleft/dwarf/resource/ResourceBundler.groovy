@@ -36,7 +36,7 @@ class ResourceBundler {
 				}
 			}
 			else if (file.file) {
-				if (file.absolutePath ==~ /^[^.]*?(?:(?:\.[^.]*)*\.(?:${resourceTypes.join('|')}))?$/) {
+				if (file.absolutePath ==~ /^.*?\.(?:${resourceTypes.join('|')})$/) {
 					resources << file
 				}
 			}
