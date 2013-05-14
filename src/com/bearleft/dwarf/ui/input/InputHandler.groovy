@@ -1,25 +1,13 @@
 package com.bearleft.dwarf.ui.input
-
-import org.lwjgl.input.Keyboard
+import com.badlogic.gdx.InputAdapter
 /**
  * User: Eric Siebeneich
  * Date: 4/21/13
  */
-class InputHandler {
+class InputHandler extends InputAdapter {
 
 	protected Map<String, Map<Integer, KeyEvent>> keyEvents = [:]
 	protected String currentName
-
-	public void start() {
-		Thread.startDaemon('Input') {
-			while(true) {
-				if (Keyboard.created) {
-					handleInput()
-				}
-				sleep(10)
-			}
-		}
-	}
 
 	public void leftShift(Closure c) {
 		keyEvents.clear()
@@ -48,17 +36,16 @@ class InputHandler {
 		keyEvents[currentName][keyCode]."${prop}" = clos
 	}
 
-	public void handleInput() {
-		while(Keyboard.next()) {
-			KeyEvent ke = keyEvents[currentName][Keyboard.eventKey]
-			if (ke) {
-				if (Keyboard.eventKeyState) {
-					ke.keyDown?.call()
-				}
-				else {
-					ke.keyUp?.call()
-				}
-			}
+	public boolean keyDown(int keycode) {
+		Closure closure = keyEvents[currentName][keycode]?.keyDown
+		if (closure) {
+			closure()
+		}
+	}
+	public boolean keyUp(int keycode) {
+		Closure closure = keyEvents[currentName][keycode]?.keyUp
+		if (closure) {
+			closure()
 		}
 	}
 }

@@ -29,7 +29,7 @@ class GameMap {
 	public void each(int rMin, int cMin, int rMax, int cMax, Closure closure) {
 		for (int r = rMin; r < rMax; r++) {
 			for (int c = cMin; c < cMax; c++) {
-				closure(r, c, tiles[r][c])
+				closure(r, c, this[r, c])
 			}
 		}
 	}
@@ -45,9 +45,9 @@ class GameMap {
 
 		for (int r = rMin; r < rMax; r++) {
 			for (int c = cMin; c < cMax; c++) {
-				closure(r, c, tiles[r][c],
-						screenWidth / 2 + (c * configuration.tileWidth) - configuration.tileWidth / 2,
-						screenHeight / 2 + (r * configuration.tileHeight) - configuration.tileHeight / 2)
+				closure(r, c, this[r, c],
+						screenWidth / 2 + ((c - cameraX) * configuration.tileWidth) - configuration.tileWidth / 2,
+						screenHeight / 2 + ((r - cameraY) * configuration.tileHeight) - configuration.tileHeight / 2)
 			}
 		}
 	}

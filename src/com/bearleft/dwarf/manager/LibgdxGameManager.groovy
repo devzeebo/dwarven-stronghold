@@ -1,6 +1,7 @@
 package com.bearleft.dwarf.manager
-import com.badlogic.gdx.ApplicationListener
+import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
@@ -15,13 +16,15 @@ import com.bearleft.dwarf.map.GameMap
 import com.bearleft.dwarf.map.GameTile
 import com.bearleft.dwarf.resource.ResourceLoader
 import com.bearleft.dwarf.resource.asset.ClasspathFileHandleResolver
+import com.bearleft.dwarf.ui.input.InputHandler
 import com.bearleft.dwarf.ui.render.RenderConfiguration
 import com.bearleft.dwarf.util.MetaUtility
+import org.lwjgl.input.Keyboard
 /**
  * User: Eric Siebeneich
  * Date: 4/22/13
  */
-class LibgdxGameManager implements ApplicationListener {
+class LibgdxGameManager extends ApplicationAdapter {
 
 	static RenderConfiguration configuration = new RenderConfiguration(tileWidth: 128, tileHeight: 128, zoom: 0.5)
 	GameMap map
@@ -29,6 +32,7 @@ class LibgdxGameManager implements ApplicationListener {
 	SpriteBatch batch
 	ShapeRenderer shapes
 	BitmapFont font
+	InputHandler handler
 
 	boolean debug = true
 
@@ -37,6 +41,27 @@ class LibgdxGameManager implements ApplicationListener {
 
 	@Override
 	void create() {
+		handler = new InputHandler()
+		handler << {
+			name 'camera'
+			onKeyDown(Input.Keys.LEFT) {
+				println 'LEFT'
+				cameraX -= 1
+			}
+			onKeyDown(Input.Keys.RIGHT) {
+				println 'RIGHT'
+				cameraX += 1
+			}
+			onKeyDown(Input.Keys.UP) {
+				println 'UP'
+				cameraY += 1
+			}
+			onKeyDown(Input.Keys.DOWN) {
+				println 'DOWN'
+				cameraY -= 1
+			}
+		}
+
 		ResourceLoader.load(ConfigBootstrap)
 
 		map = new GameMap(100, 100)
@@ -63,15 +88,15 @@ class LibgdxGameManager implements ApplicationListener {
 		}
 
 		am.finishLoading()
-	}
 
-	@Override
-	void resize(int i, int i1) {
-
+		Keyboard.enableRepeatEvents(true)
+		Gdx.input.inputProcessor = handler
 	}
 
 	@Override
 	void render() {
+		Gdx.graphics.getGL20().glClearColor( 1, 0, 0, 1 );
+		Gdx.graphics.getGL20().glClear( Gdx.gl20.GL_COLOR_BUFFER_BIT | Gdx.gl20.GL_DEPTH_BUFFER_BIT );
 		batch.begin()
 		map.each(
 				cameraX, cameraY,
@@ -79,7 +104,7 @@ class LibgdxGameManager implements ApplicationListener {
 			{ int r, int c, GameTile tile, rLoc, cLoc ->
 				batch.draw(am.get(tile.image), rLoc, cLoc, configuration.tileWidth, configuration.tileHeight)
 				if (debug) {
-					font.draw(batch, "(${r}, ${c})", rLoc, cLoc)
+					font.draw(batch, "(${c}, ${r})", rLoc, cLoc)
 				}
 			}
 		batch.end()
@@ -96,16 +121,6 @@ class LibgdxGameManager implements ApplicationListener {
 			shapes.line(Gdx.graphics.width / 2, 0, Gdx.graphics.width / 2, Gdx.graphics.height)
 			shapes.end()
 		}
-	}
-
-	@Override
-	void pause() {
-
-	}
-
-	@Override
-	void resume() {
-
 	}
 
 	@Override
