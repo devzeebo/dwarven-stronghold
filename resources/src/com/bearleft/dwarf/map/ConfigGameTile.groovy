@@ -21,3 +21,7 @@ staticTypes {
 	flags PASSABLE
 	url 'resources/images/actor/player.png'
 }
+
+'3' {
+	url 'resources/images/cursor/cursor.png'
+}

@@ -21,6 +21,8 @@ import com.bearleft.dwarf.ui.render.Camera
 import com.bearleft.dwarf.ui.render.RenderConfiguration
 import com.bearleft.dwarf.util.MetaUtility
 import org.lwjgl.input.Keyboard
+import org.lwjgl.input.Mouse
+
 /**
  * User: Eric Siebeneich
  * Date: 4/22/13
@@ -41,21 +43,26 @@ class LibgdxGameManager extends ApplicationAdapter {
 
 	@Override
 	void create() {
-		camera = new Camera(velocity: 0.05f)
+		camera = new Camera(velocity: 0.05f, mouseVelocity: 0.1f)
 		handler = new InputHandler()
 		handler << {
+
+			int bounds = 25
+			def camLeft = { camera.x -= it ?: camera.velocity }
+			def camRight = { camera.x += it ?: camera.velocity }
+			def camUp = { camera.y -= it ?: camera.velocity }
+			def camDown = { camera.y += it ?: camera.velocity }
+
 			name 'camera'
-			onKeyDown(Input.Keys.LEFT) {
-				camera.cameraX -= camera.velocity
-			}
-			onKeyDown(Input.Keys.RIGHT) {
-				camera.cameraX += camera.velocity
-			}
-			onKeyDown(Input.Keys.UP) {
-				camera.cameraY -= camera.velocity
-			}
-			onKeyDown(Input.Keys.DOWN) {
-				camera.cameraY += camera.velocity
+			onKeyDown(Input.Keys.LEFT, camLeft)
+			onKeyDown(Input.Keys.RIGHT, camRight)
+			onKeyDown(Input.Keys.UP, camUp)
+			onKeyDown(Input.Keys.DOWN, camDown)
+			onMouseMoved { int x, int y ->
+				if (x < bounds) { camLeft(camera.mouseVelocity) }
+				if (y < bounds) { camUp(camera.mouseVelocity) }
+				if (x > Gdx.graphics.width - bounds) { camRight(camera.mouseVelocity) }
+				if (y > Gdx.graphics.height - bounds) { camDown(camera.mouseVelocity) }
 			}
 		}
 
@@ -87,13 +94,16 @@ class LibgdxGameManager extends ApplicationAdapter {
 		am.finishLoading()
 
 		Keyboard.enableRepeatEvents(true)
+
+		Mouse.grabbed = true
+		Mouse.clipMouseCoordinatesToWindow = true
 	}
 
 	@Override
 	void render() {
 
-		float cameraX = camera.cameraX
-		float cameraY = camera.cameraY
+		float cameraX = camera.x
+		float cameraY = camera.y
 
 		Gdx.graphics.getGL20().glClearColor( 1, 0, 0, 1 );
 		Gdx.graphics.getGL20().glClear( Gdx.gl20.GL_COLOR_BUFFER_BIT | Gdx.gl20.GL_DEPTH_BUFFER_BIT );
@@ -121,6 +131,10 @@ class LibgdxGameManager extends ApplicationAdapter {
 			shapes.line(Gdx.graphics.width / 2, 0, Gdx.graphics.width / 2, Gdx.graphics.height)
 			shapes.end()
 		}
+
+		batch.begin()
+		batch.draw(am.get(CloneContainer[GameTile][3].images[0]), Gdx.input.x, Gdx.input.y)
+		batch.end()
 	}
 
 	@Override

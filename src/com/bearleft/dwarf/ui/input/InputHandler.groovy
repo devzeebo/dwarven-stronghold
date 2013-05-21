@@ -2,6 +2,7 @@ package com.bearleft.dwarf.ui.input
 
 import com.badlogic.gdx.Gdx
 import org.lwjgl.input.Keyboard
+import org.lwjgl.input.Mouse
 
 /**
  * User: Eric Siebeneich
@@ -10,6 +11,7 @@ import org.lwjgl.input.Keyboard
 class InputHandler {
 
 	protected Map<String, Map<Integer, KeyEvent>> keyEvents = [:]
+	protected Map<String, Closure> mouseListeners = [:]
 	protected String currentName
 
 	public InputHandler() {
@@ -43,6 +45,10 @@ class InputHandler {
 		addKeyEvent(keyCode, 0, 'keyDown', clos)
 	}
 
+	private void onMouseMoved(Closure clos) {
+		mouseListeners[currentName] = clos
+	}
+
 	private void addKeyEvent(int keyCode, long repeatTime, String prop, Closure clos) {
 		if (!keyEvents[currentName][keyCode]) {
 			keyEvents[currentName][keyCode] = new KeyEvent(keycode: keyCode, repeatTime: repeatTime)
@@ -63,6 +69,9 @@ class InputHandler {
 					}
 				}
 			}
+		}
+		if (Mouse.created && mouseListeners[currentName]) {
+			mouseListeners[currentName](Gdx.input.x, Gdx.input.y)
 		}
 	}
 }

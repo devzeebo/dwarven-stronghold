@@ -6,8 +6,9 @@ package com.bearleft.dwarf.ui.render
  */
 class Camera {
 
-	float cameraX
-	float cameraY
+	float x
+	float y
 
 	float velocity
+	float mouseVelocity
 }
