@@ -9,4 +9,7 @@ class KeyEvent {
 	int keycode
 	Closure keyDown
 	Closure keyUp
+
+	long lastInvoked
+	long repeatTime
 }

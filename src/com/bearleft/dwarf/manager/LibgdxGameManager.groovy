@@ -17,6 +17,7 @@ import com.bearleft.dwarf.map.GameTile
 import com.bearleft.dwarf.resource.ResourceLoader
 import com.bearleft.dwarf.resource.asset.ClasspathFileHandleResolver
 import com.bearleft.dwarf.ui.input.InputHandler
+import com.bearleft.dwarf.ui.render.Camera
 import com.bearleft.dwarf.ui.render.RenderConfiguration
 import com.bearleft.dwarf.util.MetaUtility
 import org.lwjgl.input.Keyboard
@@ -36,29 +37,25 @@ class LibgdxGameManager extends ApplicationAdapter {
 
 	boolean debug = true
 
-	int cameraX
-	int cameraY
+	Camera camera
 
 	@Override
 	void create() {
+		camera = new Camera(velocity: 0.05f)
 		handler = new InputHandler()
 		handler << {
 			name 'camera'
 			onKeyDown(Input.Keys.LEFT) {
-				println 'LEFT'
-				cameraX -= 1
+				camera.cameraX -= camera.velocity
 			}
 			onKeyDown(Input.Keys.RIGHT) {
-				println 'RIGHT'
-				cameraX += 1
+				camera.cameraX += camera.velocity
 			}
 			onKeyDown(Input.Keys.UP) {
-				println 'UP'
-				cameraY += 1
+				camera.cameraY -= camera.velocity
 			}
 			onKeyDown(Input.Keys.DOWN) {
-				println 'DOWN'
-				cameraY -= 1
+				camera.cameraY += camera.velocity
 			}
 		}
 
@@ -90,11 +87,14 @@ class LibgdxGameManager extends ApplicationAdapter {
 		am.finishLoading()
 
 		Keyboard.enableRepeatEvents(true)
-		Gdx.input.inputProcessor = handler
 	}
 
 	@Override
 	void render() {
+
+		float cameraX = camera.cameraX
+		float cameraY = camera.cameraY
+
 		Gdx.graphics.getGL20().glClearColor( 1, 0, 0, 1 );
 		Gdx.graphics.getGL20().glClear( Gdx.gl20.GL_COLOR_BUFFER_BIT | Gdx.gl20.GL_DEPTH_BUFFER_BIT );
 		batch.begin()
@@ -102,9 +102,9 @@ class LibgdxGameManager extends ApplicationAdapter {
 				cameraX, cameraY,
 				Gdx.graphics.width, Gdx.graphics.height, configuration)
 			{ int r, int c, GameTile tile, rLoc, cLoc ->
-				batch.draw(am.get(tile.image), rLoc, cLoc, configuration.tileWidth, configuration.tileHeight)
+				batch.draw((Texture)am.get(tile.image), (float)rLoc, (float)cLoc, configuration.tileWidth, configuration.tileHeight)
 				if (debug) {
-					font.draw(batch, "(${c}, ${r})", rLoc, cLoc)
+					font.draw(batch, "(${c}, ${r})", (int)rLoc, (int)cLoc)
 				}
 			}
 		batch.end()
@@ -115,7 +115,7 @@ class LibgdxGameManager extends ApplicationAdapter {
 			map.each(cameraX, cameraY,
 					Gdx.graphics.width, Gdx.graphics.height, configuration)
 				{ int r, int c, GameTile tile, rLoc, cLoc ->
-					shapes.box(rLoc, cLoc, 1, configuration.tileWidth, configuration.tileHeight, 1)
+					shapes.box((float)rLoc, (float)cLoc, 1, configuration.tileWidth, configuration.tileHeight, 1)
 				}
 			shapes.line(0, Gdx.graphics.height / 2, Gdx.graphics.width, Gdx.graphics.height / 2)
 			shapes.line(Gdx.graphics.width / 2, 0, Gdx.graphics.width / 2, Gdx.graphics.height)

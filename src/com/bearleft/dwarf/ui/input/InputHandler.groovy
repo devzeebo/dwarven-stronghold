@@ -1,13 +1,25 @@
 package com.bearleft.dwarf.ui.input
-import com.badlogic.gdx.InputAdapter
+
+import com.badlogic.gdx.Gdx
+import org.lwjgl.input.Keyboard
+
 /**
  * User: Eric Siebeneich
  * Date: 4/21/13
  */
-class InputHandler extends InputAdapter {
+class InputHandler {
 
 	protected Map<String, Map<Integer, KeyEvent>> keyEvents = [:]
 	protected String currentName
+
+	public InputHandler() {
+		Thread.startDaemon {
+			while(true) {
+				handleInput()
+				sleep 10
+			}
+		}
+	}
 
 	public void leftShift(Closure c) {
 		keyEvents.clear()
@@ -23,29 +35,34 @@ class InputHandler extends InputAdapter {
 		currentName = name
 	}
 
+	private void onKeyDown(int keyCode, long repeatTime, Closure clos) {
+		addKeyEvent(keyCode, repeatTime, 'keyDown', clos)
+	}
+
 	private void onKeyDown(int keyCode, Closure clos) {
-		addKeyEvent(keyCode, 'keyDown', clos)
+		addKeyEvent(keyCode, 0, 'keyDown', clos)
 	}
-	private void onKeyUp(int keyCode, Closure clos) {
-		addKeyEvent(keyCode, 'keyUp', clos)
-	}
-	private void addKeyEvent(int keyCode, String prop, Closure clos) {
+
+	private void addKeyEvent(int keyCode, long repeatTime, String prop, Closure clos) {
 		if (!keyEvents[currentName][keyCode]) {
-			keyEvents[currentName][keyCode] = new KeyEvent(keycode: keyCode)
+			keyEvents[currentName][keyCode] = new KeyEvent(keycode: keyCode, repeatTime: repeatTime)
 		}
 		keyEvents[currentName][keyCode]."${prop}" = clos
 	}
 
-	public boolean keyDown(int keycode) {
-		Closure closure = keyEvents[currentName][keycode]?.keyDown
-		if (closure) {
-			closure()
-		}
-	}
-	public boolean keyUp(int keycode) {
-		Closure closure = keyEvents[currentName][keycode]?.keyUp
-		if (closure) {
-			closure()
+	public void handleInput() {
+		if (Keyboard.created && currentName && keyEvents[currentName]) {
+			keyEvents[currentName].each { int key, KeyEvent value ->
+				if (Gdx.input.isKeyPressed(key)) {
+
+					long curTime = System.currentTimeMillis()
+
+					if (value.lastInvoked + value.repeatTime < curTime) {
+						value.keyDown()
+						value.lastInvoked = curTime
+					}
+				}
+			}
 		}
 	}
 }

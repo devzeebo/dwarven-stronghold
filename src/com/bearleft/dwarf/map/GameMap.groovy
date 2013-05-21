@@ -34,7 +34,7 @@ class GameMap {
 		}
 	}
 
-	public void each(int cameraX, int cameraY, int screenWidth, int screenHeight, RenderConfiguration configuration, Closure closure) {
+	public void each(float cameraX, float cameraY, int screenWidth, int screenHeight, RenderConfiguration configuration, Closure closure) {
 		double numCols = screenWidth / configuration.tileWidth
 		double numRows = screenHeight / configuration.tileHeight
 
