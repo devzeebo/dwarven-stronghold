@@ -1,0 +1,15 @@
+package com.bearleft.dwarf.sprite
+/**
+ * User: Eric Siebeneich
+ * Date: 6/1/13
+ */
+
+def scriptContext = context(ctype: 'com.bearleft.dwarf.sprite.ConfigSpriteDefinition')
+contribute(scriptContext) {
+	method name: 'textureGroup', type: 'void', params: ['url': 'java.lang.String', 'closure': 'groovy.lang.Closure']
+}
+
+def closureContext = context(ctype: 'com.bearleft.dwarf.sprite.ConfigSpriteDefinition', scope: closureScope(isArg: true))
+contribute(closureContext) {
+	method name: 'coords', type: 'void', params: ['coordinates': 'int...']
+}

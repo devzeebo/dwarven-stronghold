@@ -1,5 +1,6 @@
 package com.bearleft.dwarf.map
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.bearleft.dwarf.config.CloneContainer
 import com.bearleft.dwarf.config.IBuilder
 import com.bearleft.dwarf.config.IConfigurable
@@ -13,9 +14,9 @@ import java.util.List
 class GameTile implements IConfigurable {
 
 	public GameTile(int type) {
-		GameTile source = CloneContainer.clone(GameTile, type, this, ['images'])
-		if (source.images) {
-			image = source.images[(int)(Math.random() * source.images.size())]
+		GameTile source = CloneContainer.clone(GameTile, type, this, ['sprites'])
+		if (source.sprites) {
+			texture = CloneContainer[TextureRegion][source.sprites[(int)(Math.random() * source.sprites.size())]]
 		}
 	}
 
@@ -23,7 +24,7 @@ class GameTile implements IConfigurable {
 	byte flags
 	Color color
 	String effect
-	String image
+	TextureRegion texture
 
 	public Object getKey() {
 		return type
@@ -53,7 +54,7 @@ class GameTile implements IConfigurable {
 		}
 	}
 
-	List<String> images
+	List<String> sprites
 
 	protected GameTile() {}
 
@@ -78,11 +79,11 @@ class GameTile implements IConfigurable {
 			gameTile.effect = effect
 		}
 
-		void url(String url) {
-			if (!gameTile.images) {
-				gameTile.images = []
+		void sprite(String url) {
+			if (!gameTile.sprites) {
+				gameTile.sprites = []
 			}
-			gameTile.images.add(url)
+			gameTile.sprites.add(url)
 		}
 
 		public GameTile getBuiltItem() {

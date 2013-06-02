@@ -1,12 +1,7 @@
 package com.bearleft.dwarf.resource
 
-import com.bearleft.dwarf.config.CloneContainer
-import com.bearleft.dwarf.config.ConfigBootstrap
-import com.bearleft.dwarf.config.IBuilder
-import com.bearleft.dwarf.config.IConfigurable
-import com.bearleft.dwarf.config.IDelayedBuilder
+import com.bearleft.dwarf.config.*
 import com.bearleft.dwarf.util.MetaUtility
-
 /**
  * User: Eric Siebeneich
  * Date: 3/29/13
@@ -17,6 +12,12 @@ class ResourceLoader<T> {
 
 		configFile.metaClass.load = { Class<Script> script, Class type ->
 			load(script, type)
+		}
+		configFile.metaClass.loadDelayed = { Class<Script> script, Class type ->
+			loadDelayed(script, type)
+		}
+		configFile.metaClass.loadCustom = { Class<Script> script, Class type ->
+			loadCustom(script, type)
 		}
 		configFile.newInstance().run()
 	}
@@ -46,6 +47,17 @@ class ResourceLoader<T> {
 			T item = builder.buildItem(it)
 			CloneContainer.addClone(builder.type, item.key, item)
 		}
+	}
+
+	public static <S extends ICustomBuilder> void loadCustom(Class<Script> script, Class<S> type) {
+
+		S builder = type.newInstance()
+
+		script.metaClass.methodMissing = { String method, args ->
+			builder."${method}"(args)
+		}
+
+		script.newInstance().run()
 	}
 
 	private static void defineMethodMissing(Class<Script> script, def builder, boolean delayed) {

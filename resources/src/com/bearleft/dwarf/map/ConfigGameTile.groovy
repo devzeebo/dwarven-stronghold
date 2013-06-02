@@ -13,15 +13,6 @@ staticTypes {
 
 '1' {
 	flags(PASSABLE, BUILDABLE)
-	url 'resources/images/gametile/grass.jpg'
-	url 'resources/images/gametile/grass2.jpg'
-}
-
-'2' {
-	flags PASSABLE
-	url 'resources/images/actor/player.png'
-}
-
-'3' {
-	url 'resources/images/cursor/cursor.png'
+	sprite 'grass'
+	sprite 'grass2'
 }
