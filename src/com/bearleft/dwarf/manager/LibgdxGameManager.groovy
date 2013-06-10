@@ -21,13 +21,16 @@ import com.bearleft.dwarf.ui.render.RenderConfiguration
 import com.bearleft.dwarf.util.MetaUtility
 import org.lwjgl.input.Keyboard
 import org.lwjgl.input.Mouse
+
+import java.awt.geom.Point2D
+
 /**
  * User: Eric Siebeneich
  * Date: 4/22/13
  */
 class LibgdxGameManager extends ApplicationAdapter {
 
-	static RenderConfiguration configuration = new RenderConfiguration(tileWidth: 128, tileHeight: 128, zoom: 0.5)
+	static RenderConfiguration configuration = new RenderConfiguration(1600, 900, 128, 128, 0.5)
 	GameMap map
 	SpriteBatch batch
 	ShapeRenderer shapes
@@ -41,8 +44,9 @@ class LibgdxGameManager extends ApplicationAdapter {
 
 	@Override
 	void create() {
-		camera = new Camera(velocity: 0.05f, mouseVelocity: 0.1f)
+		camera = new Camera(velocity: 0.05f, mouseVelocity: 0.1f, config: configuration)
 		mouse = new MouseState()
+
 		handler = new InputHandler()
 		handler << {
 
@@ -74,7 +78,7 @@ class LibgdxGameManager extends ApplicationAdapter {
 				mouse.y = y
 			}
 			onMousePressed Input.Buttons.LEFT, { int x, int y ->
-				mouse.startDrag(x, y)
+				mouse.startDrag(camera.convertToWorldCoords(x, y))
 			}
 			onMouseReleased Input.Buttons.LEFT, { int x, int y ->
 				mouse.endDrag(x, y)
@@ -130,7 +134,8 @@ class LibgdxGameManager extends ApplicationAdapter {
 		shapes.begin(ShapeRenderer.ShapeType.Line)
 
 		if (mouse.state == MouseState.STATE_DRAG) {
-			shapes.box(mouse.dragX, mouse.dragY, 1, mouse.x - mouse.dragX, mouse.y - mouse.dragY, 1)
+			Point2D.Float screenDrag = camera.convertToScreenCoords(mouse.drag)
+			shapes.box(screenDrag.@x, screenDrag.@y, 1, (mouse.x - screenDrag.@x) as float, (mouse.y - screenDrag.@y) as float, 1)
 		}
 
 		shapes.end()
@@ -148,8 +153,8 @@ class LibgdxGameManager extends ApplicationAdapter {
 		cfg.with {
 			title = 'Dwarven Stronghold'
 			useGL20 = true
-			width = 1600
-			height = 900
+			width = configuration.width
+			height = configuration.height
 			resizable = false
 		}
 		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true")
